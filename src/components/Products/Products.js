@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Card, Button, Accordion, Toast } from 'react-bootstrap';
 import './product.data';
 import { phoneData } from './product.data';
@@ -7,6 +7,9 @@ const Products = () => {
   const [items, setItems] = useState(phoneData);
   const [cart, setCart] = useState([]);
   const [notification, setNotification] = useState({ show: false, message: '' });
+
+  // Ref for the Accordion section
+  const accordionRef = useRef(null);
 
   // Increment quantity of the item
   const countUp = (id) => {
@@ -55,6 +58,13 @@ const Products = () => {
   // Calculate total price of items in the cart
   const calculateTotalPrice = () => {
     return cart.reduce((total, item) => total + (item.Price * item.Quantity), 0);
+  };
+
+  // Scroll to Accordion section
+  const scrollToAccordion = () => {
+    if (accordionRef.current) {
+      accordionRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   return (
@@ -125,7 +135,7 @@ const Products = () => {
         </div>
       ))}
 
-      <Accordion defaultActiveKey="0" className="mt-4">
+      <Accordion defaultActiveKey="0" className="mt-4" ref={accordionRef}>
         <Accordion.Item eventKey="0">
           <Accordion.Header>Carted Items</Accordion.Header>
           <Accordion.Body>
@@ -146,6 +156,26 @@ const Products = () => {
           </Accordion.Body>
         </Accordion.Item>
       </Accordion>
+
+      {/* Floating Button */}
+      <Button
+        onClick={scrollToAccordion}
+        style={{
+          position: 'fixed',
+          bottom: '20px',
+          right: '20px',
+          borderRadius: '50%',
+          width: '60px',
+          height: '60px',
+          fontSize: '16px',
+          backgroundColor: '#007bff',
+          color: 'white',
+          border: 'none',
+          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+        }}
+      >
+        View Cart
+      </Button>
     </>
   );
 };
