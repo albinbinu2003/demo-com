@@ -97,7 +97,27 @@ const Products = () => {
           </Toast>
         </>
       )}
-
+           <Accordion defaultActiveKey="0" className="mt-4" ref={accordionRef}>
+        <Accordion.Item eventKey="0">
+          <Accordion.Header>Carted Items</Accordion.Header>
+          <Accordion.Body>
+            {cart.length > 0 ? (
+              <>
+                <ul>
+                  {cart.map((item) => (
+                    <li key={item.id}>
+                      {item.Name} - Quantity: {item.Quantity}
+                    </li>
+                  ))}
+                </ul>
+                <h5>Total Payable: ₹{calculateTotalPrice().toFixed(2)}</h5>
+              </>
+            ) : (
+              <p>No items in the cart.</p>
+            )}
+          </Accordion.Body>
+        </Accordion.Item>
+      </Accordion>
       {items.map((item) => (
         <div className="d-inline-flex" key={item.id}>
           <Card style={{ width: '23rem' }} className="m-4">
@@ -135,27 +155,7 @@ const Products = () => {
         </div>
       ))}
 
-      <Accordion defaultActiveKey="0" className="mt-4" ref={accordionRef}>
-        <Accordion.Item eventKey="0">
-          <Accordion.Header>Carted Items</Accordion.Header>
-          <Accordion.Body>
-            {cart.length > 0 ? (
-              <>
-                <ul>
-                  {cart.map((item) => (
-                    <li key={item.id}>
-                      {item.Name} - Quantity: {item.Quantity}
-                    </li>
-                  ))}
-                </ul>
-                <h5>Total Payable: ₹{calculateTotalPrice().toFixed(2)}</h5>
-              </>
-            ) : (
-              <p>No items in the cart.</p>
-            )}
-          </Accordion.Body>
-        </Accordion.Item>
-      </Accordion>
+   
 
       {/* Floating Button */}
       <Button
