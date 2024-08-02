@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { Card, Button, Accordion } from 'react-bootstrap';
+import { Card, Button, Accordion, Toast } from 'react-bootstrap';
 import './product.data';
 import { phoneData } from './product.data';
 
 const Products = () => {
   const [items, setItems] = useState(phoneData);
   const [cart, setCart] = useState([]);
+  const [notification, setNotification] = useState({ show: false, message: '' });
 
   // Increment quantity of the item
   const countUp = (id) => {
@@ -27,30 +28,61 @@ const Products = () => {
 
   // Add item to cart
   const addToCart = (itemId) => {
-    // Find the item from items state with the latest quantity
     const itemToAdd = items.find((i) => i.id === itemId);
 
     if (!itemToAdd) return;
 
     setCart((prevCart) => {
-      // Check if item already exists in cart
       const existingItem = prevCart.find((cartItem) => cartItem.id === itemId);
       if (existingItem) {
-        // Update existing item quantity
         return prevCart.map((cartItem) =>
           cartItem.id === itemId
             ? { ...cartItem, Quantity: itemToAdd.Quantity }
             : cartItem
         );
       } else {
-        // Add new item to cart
         return [...prevCart, { ...itemToAdd }];
       }
     });
+
+    // Show notification
+    setNotification({ show: true, message: 'Item added to cart!' });
+    setTimeout(() => {
+      setNotification({ show: false, message: '' });
+    }, 2000);
   };
 
   return (
     <>
+      {notification.show && (
+        <>
+          <div
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent black
+              zIndex: 1040, // Just below the toast
+            }}
+          ></div>
+          <Toast
+            className="position-fixed"
+            style={{
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              zIndex: 1050, // Ensure the toast appears above the overlay
+              backgroundColor: 'green',
+              color: 'white',
+            }}
+          >
+            <Toast.Body>{notification.message}</Toast.Body>
+          </Toast>
+        </>
+      )}
+
       {items.map((item) => (
         <div className="d-inline-flex" key={item.id}>
           <Card style={{ width: '23rem' }} className="m-4">
@@ -86,6 +118,7 @@ const Products = () => {
           </Card>
         </div>
       ))}
+
       <Accordion defaultActiveKey="0" className="mt-4">
         <Accordion.Item eventKey="0">
           <Accordion.Header>Carted Items</Accordion.Header>
