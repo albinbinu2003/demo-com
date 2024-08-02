@@ -52,6 +52,11 @@ const Products = () => {
     }, 2000);
   };
 
+  // Calculate total price of items in the cart
+  const calculateTotalPrice = () => {
+    return cart.reduce((total, item) => total + (item.Price * item.Quantity), 0);
+  };
+
   return (
     <>
       {notification.show && (
@@ -95,6 +100,7 @@ const Products = () => {
                 {item.Desc}
                 <br />
               </Card.Text>
+              <h5 className='central'>₹{item.Price}</h5>
               <p className="central">
                 Quantity :
                 <br />
@@ -124,13 +130,16 @@ const Products = () => {
           <Accordion.Header>Carted Items</Accordion.Header>
           <Accordion.Body>
             {cart.length > 0 ? (
-              <ul>
-                {cart.map((item) => (
-                  <li key={item.id}>
-                    {item.Name} - Quantity: {item.Quantity}
-                  </li>
-                ))}
-              </ul>
+              <>
+                <ul>
+                  {cart.map((item) => (
+                    <li key={item.id}>
+                      {item.Name} - Quantity: {item.Quantity}
+                    </li>
+                  ))}
+                </ul>
+                <h5>Total Payable: ₹{calculateTotalPrice().toFixed(2)}</h5>
+              </>
             ) : (
               <p>No items in the cart.</p>
             )}
